@@ -23,7 +23,7 @@ jobs:
     - name: Train Random Forest model
       run: python train.py
 
-    - name: Upload model & plots
+    - name: Upload model & plots & metrics
       uses: actions/upload-artifact@v4
       with:
         name: rf-artifacts
@@ -33,3 +33,4 @@ jobs:
           label_weather.pkl
           label_cloud.pkl
           pred_vs_real.png
+          metrics.txt

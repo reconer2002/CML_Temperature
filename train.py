@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 import joblib
 
@@ -66,12 +66,29 @@ model.fit(X_train_scaled, y_train)
 # 6. Predicciones
 # ============================
 y_pred = model.predict(X_test_scaled)
-mae = mean_absolute_error(y_test, y_pred)
-
-print(f"\nMAE del modelo: {mae:.3f}")
 
 # ============================
-# 7. Guardar modelo y objetos
+# 7. Métricas
+# ============================
+mae = mean_absolute_error(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, y_pred)
+
+print(f"\nMAE: {mae:.3f}")
+print(f"MSE: {mse:.3f}")
+print(f"RMSE: {rmse:.3f}")
+print(f"R²: {r2:.3f}")
+
+# Guardar métricas en archivo
+with open("metrics.txt", "w") as f:
+    f.write(f"MAE: {mae:.3f}\n")
+    f.write(f"MSE: {mse:.3f}\n")
+    f.write(f"RMSE: {rmse:.3f}\n")
+    f.write(f"R2: {r2:.3f}\n")
+
+# ============================
+# 8. Guardar modelo y objetos
 # ============================
 joblib.dump(model, "model.pkl")
 joblib.dump(scaler, "scaler.pkl")
@@ -79,7 +96,7 @@ joblib.dump(le_weather, "label_weather.pkl")
 joblib.dump(le_cloud, "label_cloud.pkl")
 
 # ============================
-# 8. Visualización
+# 9. Visualización
 # ============================
 plt.figure(figsize=(10,5))
 plt.plot(y_test.values, label="Real")
@@ -97,3 +114,4 @@ print(" - scaler.pkl")
 print(" - label_weather.pkl")
 print(" - label_cloud.pkl")
 print(" - pred_vs_real.png")
+print(" - metrics.txt")
