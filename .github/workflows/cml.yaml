@@ -1,0 +1,35 @@
+name: CI for ML project
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Train Random Forest model
+      run: python train.py
+
+    - name: Upload model & plots
+      uses: actions/upload-artifact@v3
+      with:
+        name: rf-artifacts
+        path: |
+          model.pkl
+          scaler.pkl
+          label_weather.pkl
+          label_cloud.pkl
+          pred_vs_real.png
